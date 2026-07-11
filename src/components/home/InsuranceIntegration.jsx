@@ -1,14 +1,70 @@
 import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 
+const typeColors = {
+  National:  'bg-blue-50 text-blue-700 border-blue-200',
+  Private:   'bg-emerald-50 text-emerald-700 border-emerald-200',
+  Corporate: 'bg-purple-50 text-purple-700 border-purple-200',
+};
+
+const insurancePartners = [
+  { name: "SHA / NHIF",           type: "National",  logo: "🏛️" },
+  { name: "CIC Insurance",        type: "Private",   logo: "🛡️" },
+  { name: "Jubilee Insurance",    type: "Private",   logo: "🛡️" },
+  { name: "Britam",               type: "Private",   logo: "🛡️" },
+  { name: "APA Insurance",        type: "Private",   logo: "🛡️" },
+  { name: "Madison Insurance",    type: "Private",   logo: "🛡️" },
+  { name: "AON / Minet Kenya",    type: "Corporate", logo: "🏢" },
+  { name: "Heritage Insurance",   type: "Private",   logo: "🛡️" },
+  { name: "AAR Insurance",        type: "Private",   logo: "🛡️" },
+  { name: "Resolution Insurance", type: "Private",   logo: "🛡️" },
+];
+
 export default function InsuranceIntegration() {
   return (
-    <section className="py-16 bg-white border-t border-slate-100">
+    <section className="py-10 bg-slate-50 border-t border-slate-100">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col items-center justify-center text-center max-w-2xl mx-auto">
-          <ShieldCheck className="w-16 h-16 text-accent mb-6" />
-          <h3 className="text-3xl font-bold text-slate-800 mb-4">We Accept SHA</h3>
+
+        {/* Header row */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary mb-2">
+              <ShieldCheck className="w-4 h-4" />
+              Accepted Cover
+            </div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Accepted Insurance Providers</h2>
+          </div>
+          {/* Legend */}
+          <div className="flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wider">
+            {Object.entries(typeColors).map(([type, cls]) => (
+              <span key={type} className={`px-3 py-1 rounded-full border ${cls}`}>{type}</span>
+            ))}
+          </div>
         </div>
+
+        {/* Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          {insurancePartners.map((partner, idx) => (
+            <div
+              key={idx}
+              className="bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 px-4 py-4 flex flex-col items-center text-center gap-2 group"
+            >
+              <span className="text-2xl">{partner.logo}</span>
+              <span className="font-bold text-slate-800 text-xs leading-snug group-hover:text-primary transition-colors">
+                {partner.name}
+              </span>
+              <span className={`text-[9px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${typeColors[partner.type]}`}>
+                {partner.type}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Note */}
+        <p className="text-center text-xs text-slate-400 mt-6">
+          Please confirm your coverage with your insurer before your visit. Our billing desk is available to assist with pre-authorisation.
+        </p>
+
       </div>
     </section>
   );

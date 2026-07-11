@@ -31,8 +31,8 @@ export default function DashboardLayout() {
         <Link to="/" className="flex items-center gap-2 text-primary">
           <HeartPulse className="h-8 w-8 text-primary" />
           <div className="flex flex-col leading-tight">
-            <span className="font-bold text-lg text-slate-800">City Central Hospital</span>
-            <span className="text-xs text-slate-400 font-medium tracking-wide">Reception Desk</span>
+            <span className="font-bold text-lg text-slate-800">Kuva Hospital</span>
+            <span className="text-xs text-slate-400 font-semibold tracking-wider uppercase text-primary">Webuye Desk</span>
           </div>
         </Link>
 
