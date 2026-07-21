@@ -55,20 +55,20 @@ export default function OurStaff() {
   });
 
   return (
-    <section id="staff" className="py-10 bg-slate-50">
+    <section id="staff" className="py-10 bg-slate-50 dark:bg-slate-900/20">
       <div className="container mx-auto px-4">
         
         {/* Header */}
         <div className="text-center mb-6 max-w-2xl mx-auto">
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-4">Find a Doctor</h2>
+          <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Find a Doctor</h2>
           <div className="w-16 h-1 bg-gradient-to-r from-secondary to-accent mx-auto rounded-full mb-4"></div>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 dark:text-slate-400 text-sm">
             Search our directory of board-certified clinical specialists, general practitioners, and surgeons practicing at Kuva Hospital.
           </p>
         </div>
 
         {/* Directory Controls */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm mb-10 max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm mb-10 max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Search bar */}
           <div className="relative w-full md:w-72">
             <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
@@ -77,7 +77,7 @@ export default function OurStaff() {
               placeholder="Search by name, education, or bio..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-slate-800 outline-none transition-all"
+              className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-slate-800 dark:text-white bg-white dark:bg-slate-900 outline-none transition-all"
             />
           </div>
 
@@ -86,7 +86,7 @@ export default function OurStaff() {
             <select
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}
-              className="w-full md:w-56 px-4 py-3 border border-slate-200 rounded-xl bg-white text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-semibold"
+              className="w-full md:w-56 px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-semibold"
             >
               {specialties.map((spec, idx) => (
                 <option key={idx} value={spec}>{spec}</option>
@@ -105,10 +105,10 @@ export default function OurStaff() {
             filteredDoctors.map((staff, idx) => (
               <div 
                 key={idx} 
-                className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col sm:flex-row group"
+                className="bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row group"
               >
                 {/* Doctor Image */}
-                <div className="w-full sm:w-44 h-48 sm:h-auto bg-slate-100 flex-shrink-0 relative overflow-hidden">
+                <div className="w-full sm:w-44 h-48 sm:h-auto bg-slate-100 dark:bg-slate-700 flex-shrink-0 relative overflow-hidden">
                   <img
                     src={staff.image}
                     alt={staff.name}
@@ -122,22 +122,22 @@ export default function OurStaff() {
                 {/* Details */}
                 <div className="p-6 flex flex-col justify-between flex-grow">
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-1 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 group-hover:text-primary dark:group-hover:text-primary transition-colors">
                       {staff.name}
                     </h3>
                     <p className="text-sm font-semibold text-secondary mb-3">{staff.role}</p>
                     
-                    <p className="text-slate-500 text-xs leading-relaxed mb-4 line-clamp-3">
+                    <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed mb-4 line-clamp-3">
                       {staff.bio}
                     </p>
 
                     {/* Meta Info */}
-                    <div className="space-y-1.5 border-t border-slate-100 pt-3.5 mb-5">
-                      <div className="flex items-center gap-2 text-[11px] text-slate-500 font-semibold">
+                    <div className="space-y-1.5 border-t border-slate-100 dark:border-slate-700 pt-3.5 mb-5">
+                      <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 font-semibold">
                         <Award className="w-3.5 h-3.5 text-primary flex-shrink-0" />
                         <span>{staff.education}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-[11px] text-slate-500 font-semibold">
+                      <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 font-semibold">
                         <Calendar className="w-3.5 h-3.5 text-accent flex-shrink-0" />
                         <span>Consulting: {staff.schedule}</span>
                       </div>
@@ -147,7 +147,7 @@ export default function OurStaff() {
                   {/* Actions */}
                   <button 
                     onClick={() => window.dispatchEvent(new CustomEvent('open-booking-modal'))}
-                    className="w-full bg-slate-50 hover:bg-primary text-slate-700 hover:text-white border border-slate-200 hover:border-primary text-xs font-bold py-2.5 rounded-xl transition-all duration-300"
+                    className="w-full bg-slate-50 dark:bg-slate-900 hover:bg-primary dark:hover:bg-primary text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-white border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary text-xs font-bold py-2.5 rounded-xl transition-all duration-300"
                   >
                     Book Consultation
                   </button>

@@ -82,9 +82,27 @@ export default function LiveChatWidget() {
         }
       };
 
+      const handleStorageEvent = (e) => {
+        if (e.key === 'local_chat_messages') {
+          // If local storage changed, reload messages for this room
+          const allLocalMsgs = JSON.parse(localStorage.getItem('local_chat_messages') || '[]');
+          const filtered = allLocalMsgs
+            .filter(m => m.room_id === roomId)
+            .map(m => ({
+              id: m.id,
+              text: m.text,
+              sender: m.sender,
+              time: m.time
+            }));
+          setMessages(filtered);
+        }
+      };
+
       window.addEventListener('local-message-sent', handleLocalMessage);
+      window.addEventListener('storage', handleStorageEvent);
       return () => {
         window.removeEventListener('local-message-sent', handleLocalMessage);
+        window.removeEventListener('storage', handleStorageEvent);
       };
     }
   }, [roomId, isOfflineMode]);

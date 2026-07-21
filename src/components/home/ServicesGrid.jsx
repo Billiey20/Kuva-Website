@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Ambulance, HeartPulse, Activity, Baby, Microscope, X, Clock, ShieldCheck, CalendarRange } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const services = [
   {
@@ -73,113 +74,147 @@ export default function ServicesGrid() {
   const [selectedService, setSelectedService] = useState(null);
 
   return (
-    <section id="services" className="py-10 bg-background">
+    <section id="services" className="py-10 bg-background scroll-mt-24">
       <div className="container mx-auto px-4">
         
         {/* Title */}
-        <div className="text-center mb-8 max-w-2xl mx-auto">
-          <h2 className="text-4xl font-extrabold text-slate-900 mb-4">Clinical Services</h2>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-8 max-w-2xl mx-auto"
+        >
+          <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">Clinical Services</h2>
           <div className="w-16 h-1 bg-gradient-to-r from-secondary to-accent mx-auto rounded-full mb-4"></div>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 dark:text-slate-400 text-sm">
             Kuva Hospital offers a wide array of specialized clinical, surgical, and diagnostic services to patients across the region.
           </p>
-        </div>
+        </motion.div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <motion.div 
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: {},
+            show: { transition: { staggerChildren: 0.1 } }
+          }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
+        >
           {services.map((service, idx) => (
-            <div
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+              }}
               key={idx}
-              className="group p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
+              className="group p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between cursor-pointer"
+              onClick={() => setSelectedService(service)}
             >
               <div>
                 <div className="mb-6 inline-block group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-300">
                   {service.icon}
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-3">{service.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed mb-6">{service.desc}</p>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-3">{service.title}</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">{service.desc}</p>
               </div>
               
               <button
-                onClick={() => setSelectedService(service)}
-                className="text-primary font-bold text-sm flex items-center gap-1 hover:gap-2 transition-all self-start text-left focus:outline-none"
+                className="text-primary font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all self-start text-left focus:outline-none"
               >
                 Learn details <span aria-hidden="true">&rarr;</span>
               </button>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       {/* Service Detail Modal */}
-      {selectedService && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200 border border-slate-100 max-h-[90vh] flex flex-col">
-            
-            {/* Header */}
-            <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
-              <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2.5">
-                {selectedService.icon}
-                {selectedService.title}
-              </h3>
-              <button 
-                onClick={() => setSelectedService(null)}
-                className="p-1.5 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-600 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-6 overflow-y-auto space-y-6">
-              <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Service Overview</h4>
-                <p className="text-slate-600 text-sm leading-relaxed">{selectedService.detailedDesc}</p>
+      <AnimatePresence>
+        {selectedService && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md"
+            onClick={() => setSelectedService(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              transition={{ type: "spring", duration: 0.5, bounce: 0.2 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 max-h-[90vh] flex flex-col"
+            >
+              
+              {/* Header */}
+              <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-950 flex-shrink-0">
+                <h3 className="font-bold text-lg text-slate-800 dark:text-white flex items-center gap-2.5">
+                  {selectedService.icon}
+                  {selectedService.title}
+                </h3>
+                <button 
+                  onClick={() => setSelectedService(null)}
+                  className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
 
-              {/* Operating hours */}
-              <div className="flex items-start gap-2 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                <Clock className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+              {/* Modal Body */}
+              <div className="p-6 overflow-y-auto space-y-6">
                 <div>
-                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-0.5">Hours of Service</h4>
-                  <p className="text-xs text-slate-500 font-semibold">{selectedService.hours}</p>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Service Overview</h4>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{selectedService.detailedDesc}</p>
+                </div>
+
+                {/* Operating hours */}
+                <div className="flex items-start gap-2 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                  <Clock className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-0.5">Hours of Service</h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold">{selectedService.hours}</p>
+                  </div>
+                </div>
+
+                {/* Sub-services list */}
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">Core Specialty Capabilities</h4>
+                  <ul className="grid grid-cols-1 gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                    {selectedService.subServices.map((sub, sIdx) => (
+                      <li key={sIdx} className="flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4 text-accent flex-shrink-0" />
+                        <span>{sub}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
-              {/* Sub-services list */}
-              <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Core Specialty Capabilities</h4>
-                <ul className="grid grid-cols-1 gap-2 text-xs font-semibold text-slate-600">
-                  {selectedService.subServices.map((sub, sIdx) => (
-                    <li key={sIdx} className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-accent flex-shrink-0" />
-                      <span>{sub}</span>
-                    </li>
-                  ))}
-                </ul>
+              {/* Modal Footer */}
+              <div className="p-5 bg-slate-50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 flex gap-3 flex-shrink-0">
+                <button
+                  onClick={() => { setSelectedService(null); window.dispatchEvent(new CustomEvent('open-booking-modal')); }}
+                  className="flex-1 bg-primary text-white py-3 rounded-xl text-xs font-bold hover:bg-primary/95 transition-all shadow-md flex items-center justify-center gap-1.5"
+                >
+                  <CalendarRange className="w-4 h-4 text-accent" />
+                  Book Consultation
+                </button>
+                <button
+                  onClick={() => setSelectedService(null)}
+                  className="px-5 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                >
+                  Close
+                </button>
               </div>
-            </div>
 
-            {/* Modal Footer */}
-            <div className="p-5 bg-slate-50 border-t border-slate-100 flex gap-3 flex-shrink-0">
-              <button
-                onClick={() => { setSelectedService(null); window.dispatchEvent(new CustomEvent('open-booking-modal')); }}
-                className="flex-1 bg-primary text-white py-3 rounded-xl text-xs font-bold hover:bg-primary/95 transition-all shadow-md flex items-center justify-center gap-1.5"
-              >
-                <CalendarRange className="w-4 h-4 text-accent" />
-                Book Consultation
-              </button>
-              <button
-                onClick={() => setSelectedService(null)}
-                className="px-5 py-3 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 transition-all"
-              >
-                Close
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

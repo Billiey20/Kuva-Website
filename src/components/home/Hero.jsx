@@ -1,46 +1,47 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const slides = [
   {
     heading: "Welcome to Kuva Hospital",
     description: "Kuva Hospital is a modern, fully-equipped Level 4A referral hospital in Webuye. We have a dedicated outpatient facility purposefully separated from our urgent care unit.",
-    image: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?auto=format&fit=crop&q=90&w=1600&h=900",
+    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=90&w=1600&h=900", // Bright modern hospital corridor
     linkText: "Learn More",
     link: "#about"
   },
   {
     heading: "Surgical Services",
     description: "Our surgical theatre services cover patients of all ages — from minor routine procedures to complex surgeries — delivered by board-certified surgical specialists.",
-    image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=90&w=1600&h=900",
+    image: "https://images.unsplash.com/photo-1512678080530-7760d81faba6?auto=format&fit=crop&q=90&w=1600&h=900", // Clean surgical lights, no scary surgery
     linkText: "Find Out More",
     link: "#services"
   },
   {
     heading: "Obstetrics & Gynaecology",
     description: "The health of women during pregnancy and delivery is vital for both mother and child. Our OB/GYN team provides world-class maternal and reproductive healthcare.",
-    image: "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&q=90&w=1600&h=900",
+    image: "https://images.unsplash.com/photo-1531983412531-1f49a365ffed?auto=format&fit=crop&q=90&w=1600&h=900", // Peaceful pregnant belly
     linkText: "Find Out More",
     link: "#services"
   },
   {
     heading: "Paediatric Services",
     description: "We have a dedicated children's ward with skilled and experienced medical staff providing round-the-clock care, including a full neonatal intensive care unit (NICU).",
-    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=90&w=1600&h=900",
+    image: "https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?auto=format&fit=crop&q=90&w=1600&h=900", // Doctor checking a child
     linkText: "Find Out More",
     link: "#services"
   },
   {
     heading: "Dental Services",
     description: "At Kuva Hospital we are committed to providing world-class dental treatment in a modern clinic where quality and patient care are of utmost importance.",
-    image: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&q=90&w=1600&h=900",
+    image: "https://images.unsplash.com/photo-1600170311833-c2cf5280ce49?auto=format&fit=crop&q=90&w=1600&h=900", // Pristine, bright dental chair/room
     linkText: "Find Out More",
     link: "#services"
   },
   {
-    heading: "Radiology & Imaging",
-    description: "Our imaging department adheres to all regulatory requirements for quality assurance and radiation safety, delivering fast, accurate diagnostic results.",
-    image: "https://images.unsplash.com/photo-1516069677018-378515003435?auto=format&fit=crop&q=90&w=1600&h=900",
+    heading: "Laboratory & Imaging",
+    description: "Our diagnostic department is equipped with state-of-the-art laboratory analyzers and digital radiology imaging for fast, accurate results.",
+    image: "https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&q=90&w=1600&h=900", // High-tech lab equipment / microscopes
     linkText: "Find Out More",
     link: "#services"
   }
@@ -51,13 +52,9 @@ export default function Hero() {
   const [fading, setFading] = useState(false);
 
   const goToSlide = useCallback((index) => {
-    if (fading || index === activeSlide) return;
-    setFading(true);
-    setTimeout(() => {
-      setActiveSlide(index);
-      setFading(false);
-    }, 400);
-  }, [fading, activeSlide]);
+    if (index === activeSlide) return;
+    setActiveSlide(index);
+  }, [activeSlide]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -73,19 +70,17 @@ export default function Hero() {
 
   return (
     <section
-      className="relative w-full overflow-hidden"
-      style={{ height: 'calc(100vh - 80px)', minHeight: '520px', maxHeight: '750px' }}
+      className="relative w-full overflow-hidden h-[calc(100vh-64px)] md:h-[calc(100vh-80px)] min-h-[400px] md:min-h-[520px] max-h-[750px]"
     >
 
-      {/* ── Full-width background images — all preloaded, cross-fading ── */}
+      {/* ── Full-width background images — all preloaded, cross-fading & slow zooming ── */}
       {slides.map((s, idx) => (
         <div
           key={idx}
-          className="absolute inset-0 bg-cover bg-center transition-opacity duration-700"
-          style={{
-            backgroundImage: `url(${s.image})`,
-            opacity: activeSlide === idx ? 1 : 0,
-          }}
+          className={`absolute inset-0 bg-cover bg-center transition-all duration-[6000ms] ease-out origin-center ${
+            activeSlide === idx ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
+          }`}
+          style={{ backgroundImage: `url(${s.image})` }}
           aria-hidden={activeSlide !== idx}
         />
       ))}
@@ -108,26 +103,41 @@ export default function Hero() {
       <div className="relative z-20 h-full flex items-center">
         <div className="container mx-auto px-8 sm:px-12 lg:px-16">
 
-          {/* Text block with fade+slide animation on change */}
-          <div
-            className="max-w-lg transition-all duration-500"
-            style={{ opacity: fading ? 0 : 1, transform: fading ? 'translateY(12px)' : 'translateY(0)' }}
-          >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 leading-tight mb-5">
-              {slide.heading}
-            </h1>
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-8 font-medium max-w-sm">
-              {slide.description}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={slide.link}
-                className="inline-flex items-center bg-slate-700/70 hover:bg-slate-700/90 text-white/90 hover:text-white px-7 py-3.5 rounded-full font-semibold text-sm transition-all hover:-translate-y-0.5 backdrop-blur-sm border border-white/10"
+          {/* Text block with staggered fade+slide animation using framer-motion */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSlide}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: "easeOut", staggerChildren: 0.1 }}
+              className="max-w-lg"
+            >
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}
+                className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-5"
               >
-                {slide.linkText}
-              </a>
-            </div>
-          </div>
+                {slide.heading}
+              </motion.h1>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}
+                className="text-slate-600 text-sm sm:text-base leading-relaxed mb-8 font-medium max-w-sm"
+              >
+                {slide.description}
+              </motion.p>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.5 }}
+                className="flex flex-wrap gap-3"
+              >
+                <a
+                  href={slide.link}
+                  className="inline-flex items-center bg-slate-800 hover:bg-slate-900 text-white px-7 py-3.5 rounded-full font-semibold text-sm transition-all hover:scale-105 hover:shadow-xl shadow-lg backdrop-blur-sm"
+                >
+                  {slide.linkText}
+                </a>
+              </motion.div>
+            </motion.div>
+          </AnimatePresence>
 
           {/* Dot indicators */}
           <div className="flex gap-2 items-center mt-12">

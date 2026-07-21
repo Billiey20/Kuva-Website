@@ -32,9 +32,20 @@ export default function Dashboard() {
     window.addEventListener('local-appointments-updated', handleAppointmentsLocalUpdate);
     window.addEventListener('local-rooms-updated', handleRoomsLocalUpdate);
 
+    const handleGlobalStorage = (e) => {
+      if (e.key === 'local_appointments') {
+        handleAppointmentsLocalUpdate();
+      }
+      if (e.key === 'local_chat_rooms' && !selectedChat) {
+        handleRoomsLocalUpdate();
+      }
+    };
+    window.addEventListener('storage', handleGlobalStorage);
+
     return () => {
       window.removeEventListener('local-appointments-updated', handleAppointmentsLocalUpdate);
       window.removeEventListener('local-rooms-updated', handleRoomsLocalUpdate);
+      window.removeEventListener('storage', handleGlobalStorage);
     };
   }, []);
 
@@ -52,6 +63,7 @@ export default function Dashboard() {
     setIsLoading(true);
     setConnectionStatus('checking');
     try {
+      if (!import.meta.env.VITE_SUPABASE_URL) throw new Error("No Supabase URL configured");
       // Test Supabase connection
       const { error } = await supabase.from('appointments').select('id').limit(1);
       if (error) throw error;
@@ -145,9 +157,20 @@ export default function Dashboard() {
       }
     };
 
+    const handleStorageEvent = (e) => {
+      if (e.key === 'local_chat_messages') {
+        loadLocalMessagesForRoom(selectedChat.id);
+      }
+      if (e.key === 'local_chat_rooms') {
+        loadChatRooms(true);
+      }
+    };
+
     window.addEventListener('local-message-sent', handleLocalMessage);
+    window.addEventListener('storage', handleStorageEvent);
     return () => {
       window.removeEventListener('local-message-sent', handleLocalMessage);
+      window.removeEventListener('storage', handleStorageEvent);
     };
   }, [selectedChat, isOfflineMode]);
 

@@ -1,24 +1,67 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { HeartPulse, CalendarCheck, MapPin, Phone, Mail, ExternalLink } from 'lucide-react';
+import { HeartPulse, CalendarCheck, MapPin, Phone, Mail, ExternalLink, Menu, X, Sun, Moon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import LiveChatWidget from '../chat/LiveChatWidget';
 import BookingModal from '../modals/BookingModal';
 
 export default function PatientLayout() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Check initial dark mode preference
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
+    } else {
+      setIsDarkMode(false);
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove('dark');
+      localStorage.theme = 'light';
+      setIsDarkMode(false);
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.theme = 'dark';
+      setIsDarkMode(true);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-background font-sans">
       {/* Sticky Navbar */}
-      <header className="sticky top-0 z-50 w-full border-b bg-white/90 backdrop-blur-md shadow-sm">
-        <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+      <motion.header 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+          isScrolled 
+            ? 'bg-white/70 backdrop-blur-xl shadow-md border-b border-slate-200/50 dark:bg-slate-900/80 dark:border-slate-800' 
+            : 'bg-white/95 border-b border-slate-100 dark:bg-slate-950 dark:border-slate-800'
+        }`}
+      >
+        <div className={`container mx-auto px-4 flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-16' : 'h-24'}`}>
           <Link to="/" className="flex items-center gap-2 text-primary">
             <HeartPulse className="h-8 w-8 text-primary" />
             <div className="flex flex-col">
-              <span className="font-bold text-xl leading-tight">Kuva Hospital</span>
+              <span className="font-bold text-xl leading-tight text-slate-900 dark:text-white">Kuva Hospital</span>
               <span className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase">Webuye</span>
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
             <a href="#about" className="hover:text-primary transition-colors">About Us</a>
             <a href="#services" className="hover:text-primary transition-colors">Services</a>
             <a href="#staff" className="hover:text-primary transition-colors">Our Doctors</a>
@@ -28,20 +71,89 @@ export default function PatientLayout() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <a
-              href="tel:+254700111222"
-              className="hidden md:flex items-center gap-1.5 text-slate-600 hover:text-primary transition-colors text-sm font-semibold"
-            >
+            <a href="tel:+254700111222" className="hidden lg:flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-primary dark:text-slate-300 transition-colors">
               <Phone className="h-4 w-4 text-primary" />
               +254 700 111 222
             </a>
-            <button onClick={() => window.dispatchEvent(new CustomEvent('open-booking-modal'))} className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-full font-semibold flex items-center gap-2 shadow-md transition-all hover:shadow-lg">
+            
+            <button 
+              onClick={toggleDarkMode} 
+              className="relative p-2 rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors focus:outline-none ml-2 w-9 h-9 flex items-center justify-center overflow-hidden"
+              aria-label="Toggle Dark Mode"
+            >
+              <AnimatePresence mode="wait">
+                {isDarkMode ? (
+                  <motion.div
+                    key="sun"
+                    initial={{ y: -20, opacity: 0, rotate: -90 }}
+                    animate={{ y: 0, opacity: 1, rotate: 0 }}
+                    exit={{ y: 20, opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute"
+                  >
+                    <Sun className="h-5 w-5 text-amber-400" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="moon"
+                    initial={{ y: -20, opacity: 0, rotate: -90 }}
+                    animate={{ y: 0, opacity: 1, rotate: 0 }}
+                    exit={{ y: 20, opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute"
+                  >
+                    <Moon className="h-5 w-5" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </button>
+
+            <button onClick={() => window.dispatchEvent(new CustomEvent('open-booking-modal'))} className="flex bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 sm:px-6 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm items-center gap-1.5 sm:gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ml-1">
               <CalendarCheck className="h-4 w-4" />
-              Book Appointment
+              <span className="hidden sm:inline">Book Appointment</span>
+              <span className="sm:hidden">Book</span>
+            </button>
+            <button 
+              className="md:hidden p-2 text-slate-600 hover:text-primary dark:text-slate-300 transition-colors focus:outline-none"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
-      </header>
+
+        {/* Mobile Menu Dropdown */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-slate-100 bg-white overflow-hidden shadow-lg"
+            >
+              <nav className="flex flex-col px-6 py-6 space-y-5 text-sm font-bold text-slate-700">
+                <a href="#about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary">About Us</a>
+                <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary">Services</a>
+                <a href="#staff" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary">Our Doctors</a>
+                <a href="#testimonials" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary">Testimonials</a>
+                <a href="#faqs" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary">FAQs</a>
+                <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary">Contact</a>
+                <hr className="border-slate-100 my-2" />
+                <button 
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    window.dispatchEvent(new CustomEvent('open-booking-modal'));
+                  }} 
+                  className="bg-primary text-primary-foreground w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-sm"
+                >
+                  <CalendarCheck className="h-4 w-4" />
+                  Book Appointment
+                </button>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
 
       {/* Main Content */}
       <main className="flex-grow">

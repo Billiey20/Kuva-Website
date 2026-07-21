@@ -22,6 +22,28 @@
     --destructive-foreground: 210 40% 98%;
     --radius: 0.5rem;
   }
+  
+  .dark {
+    --background: 224 71% 4%; /* Very deep midnight blue */
+    --foreground: 210 40% 98%;
+    --card: 224 71% 8%; /* Slightly lighter for cards */
+    --card-foreground: 210 40% 98%;
+    --popover: 224 71% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 224 71% 4%;
+    --secondary: 224 30% 15%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 224 30% 15%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 224 30% 15%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 224 30% 15%;
+    --input: 224 30% 15%;
+    --ring: 212.7 26.8% 83.9%;
+  }
 }
 
 @layer base {

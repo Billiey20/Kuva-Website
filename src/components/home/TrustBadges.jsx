@@ -30,14 +30,14 @@ const badges = [
 
 export default function TrustBadges() {
   return (
-    <section className="py-10 bg-slate-50 border-t border-b border-slate-100">
+    <section className="py-10 bg-slate-50 dark:bg-slate-900/20 border-t border-b border-slate-100 dark:border-slate-800">
       <div className="container mx-auto px-4">
         
         {/* Header */}
         <div className="text-center mb-8 max-w-2xl mx-auto">
-          <h3 className="text-3xl font-extrabold text-slate-900 mb-3">Accreditations & Quality Standards</h3>
+          <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-3">Accreditations & Quality Standards</h3>
           <div className="w-16 h-1 bg-gradient-to-r from-secondary to-accent mx-auto rounded-full mb-4"></div>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 dark:text-slate-400 text-sm">
             Kuva Hospital maintains high clinical standards, certified by national regulatory bodies and international quality assessors.
           </p>
         </div>
@@ -47,14 +47,14 @@ export default function TrustBadges() {
           {badges.map((badge, idx) => (
             <div 
               key={idx} 
-              className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center group"
+              className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center group"
             >
-              <div className="mb-5 p-4 bg-slate-50 rounded-2xl group-hover:scale-110 group-hover:bg-primary/5 transition-all duration-300">
+              <div className="mb-5 p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl group-hover:scale-110 group-hover:bg-primary/5 dark:group-hover:bg-primary/10 transition-all duration-300">
                 {badge.icon}
               </div>
-              <h4 className="font-bold text-slate-800 text-lg mb-2 group-hover:text-primary transition-colors">{badge.title}</h4>
-              <p className="text-slate-500 text-xs leading-relaxed mb-4">{badge.desc}</p>
-              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 bg-slate-100 px-3 py-1 rounded-full">
+              <h4 className="font-bold text-slate-800 dark:text-white text-lg mb-2 group-hover:text-primary transition-colors">{badge.title}</h4>
+              <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed mb-4">{badge.desc}</p>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full">
                 {badge.badgeText}
               </span>
             </div>
